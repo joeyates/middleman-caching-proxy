@@ -1,7 +1,7 @@
+module Middleman; end
+
 module Middleman
-  module Caching
-    module Proxy
-      VERSION = "0.1.0"
-    end
+  module CachingProxy
+    VERSION = "0.1.0"
   end
 end
