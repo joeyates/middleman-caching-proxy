@@ -61,7 +61,7 @@ class CacheManifest
     true
   end
 
-  def build(items: [])
+  def build(items: {})
     {
       KEY => key,
       ITEMS => items,
