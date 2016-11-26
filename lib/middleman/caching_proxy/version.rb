@@ -1,7 +1,5 @@
 module Middleman; end
 
-module Middleman
-  module CachingProxy
-    VERSION = "0.1.3"
-  end
+module Middleman::CachingProxy
+  VERSION = "0.1.4"
 end
