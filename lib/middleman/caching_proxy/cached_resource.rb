@@ -1,6 +1,6 @@
 require "autostruct/wrap"
 
-class CachedResource
+class Middleman::CachingProxy::CachedResource
   def initialize(path:, cached_path:, build_path:); end
   include Autostruct::Wrap
 

@@ -5,6 +5,8 @@ require "middleman/caching_proxy/cache"
 require "middleman/caching_proxy/cache_item"
 require "middleman/caching_proxy/cached_resource"
 
+module Middleman::CachingProxy; end
+
 class Middleman::CachingProxy::Extension < ::Middleman::Extension
   option :cache_directory,
     "tmp/proxy_cache",

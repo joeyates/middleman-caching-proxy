@@ -3,7 +3,7 @@ require "fileutils"
 
 require "middleman/caching_proxy/version"
 
-class CacheManifest
+class Middleman::CachingProxy::CacheManifest
   FILENAME = ".manifest.json"
   KEY = "key"
   ITEMS = "items"
@@ -25,9 +25,8 @@ class CacheManifest
 
   def save
     ensure_cache_directory
-    File.open(manifest_path, "w") do |f|
-      f.write build(items: items).to_json
-    end
+
+    File.write manifest_path, build(items: items).to_json
   end
 
   private 

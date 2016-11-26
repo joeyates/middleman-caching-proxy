@@ -3,7 +3,7 @@ require "fileutils"
 
 require "middleman/caching_proxy/cache_manifest"
 
-class Cache
+class Middleman::CachingProxy::Cache
   def initialize(path:, key:)
     @manifest = nil
   end
