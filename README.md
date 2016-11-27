@@ -1,7 +1,19 @@
+[![Build Status](https://secure.travis-ci.org/joeyates/middleman-caching-proxy.png)][Continuous Integration]
+
 # Middleman::CachingProxy
 
 Caches the result of `proxy` calls allong with the fingerprint of their inputs.
 If the inputs remain the same, uses the cached version.
+
+  * [Source Code]
+  * [API documentation]
+  * [Rubygem]
+  * [Continuous Integration]
+
+[Source Code]: https://github.com/joeyates/middleman-caching-proxy "Source code at GitHub"
+[API documentation]: http://rubydoc.info/gems/middleman-caching-proxy/frames "RDoc API Documentation at Rubydoc.info"
+[Rubygem]: http://rubygems.org/gems/middleman-caching-proxy "Ruby gem at rubygems.org"
+[Continuous Integration]: http://travis-ci.org/joeyates/middleman-caching-proxy "Build status by Travis-CI"
 
 ## Installation
 
