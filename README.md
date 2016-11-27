@@ -24,7 +24,11 @@ Or install it yourself as:
 In `config.rb`:
 
 ```ruby
-activate :caching_proxy
+git_head = `git rev-parse HEAD`.chomp
+
+activate :caching_proxy, cache_key: git_head
+
+things = [...]
 
 things.each do |thing|
   proxy_with_cache(
