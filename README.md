@@ -1,4 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/joeyates/middleman-caching-proxy.png)][Continuous Integration]
+[![Source Analysis](https://codeclimate.com/github/joeyates/middleman-caching-proxy/badges/gpa.svg)](https://codeclimate.com/github/joeyates/middleman-caching-proxy)
+[![Test Coverage](https://codeclimate.com/github/joeyates/middleman-caching-proxy/badges/coverage.svg)](https://codeclimate.com/github/joeyates/middleman-caching-proxy/coverage)
 
 # Middleman::CachingProxy
 
