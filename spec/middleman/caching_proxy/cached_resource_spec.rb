@@ -35,7 +35,7 @@ RSpec.describe Middleman::CachingProxy::CachedResource do
   end
 
   describe "#ext" do
-    it "is the an enpty string" do
+    it "is an empty string" do
       expect(subject.ext).to eq("")
     end
   end
