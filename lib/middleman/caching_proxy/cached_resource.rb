@@ -1,4 +1,5 @@
 require "autostruct/wrap"
+require "middleman-core/util"
 
 module Middleman::CachingProxy
   class CachedResource
@@ -27,6 +28,10 @@ module Middleman::CachingProxy
 
     def content_type
       "text/html"
+    end
+
+    def data
+      @data ||= ::Middleman::Util.recursively_enhance({}).freeze
     end
   end
 end

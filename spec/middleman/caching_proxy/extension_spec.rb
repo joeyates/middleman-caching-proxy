@@ -155,8 +155,14 @@ module Middleman::CachingProxy
       let(:will_use_cache) { false }
       let(:item) { double(CacheItem, args) }
       let(:args) do
-        {path: "p", template: "t", proxy_options: {}, fingerprint: "f"}
+        {
+          path: path, template: template,
+          proxy_options: proxy_options, fingerprint: "f"
+        }
       end
+      let(:path) { "path" }
+      let(:template) { "template" }
+      let(:proxy_options) { {ciao: "hello"} }
 
       subject { AppWithExtension.new }
 
@@ -169,9 +175,7 @@ module Middleman::CachingProxy
       end
 
       describe "#proxy_with_cache" do
-        before do
-          subject.proxy_with_cache(args)
-        end
+        let!(:call) { subject.proxy_with_cache(args) }
 
         it "adds the item to the caching proxy" do
           expect(caching_proxy).to have_received(:add).with(item)
@@ -189,7 +193,20 @@ module Middleman::CachingProxy
           let(:will_use_cache) { false }
 
           it "proxies the item" do
-            expect(subject).to have_received(:proxy)
+            expect(subject).
+              to have_received(:proxy).with(path, template, proxy_options)
+          end
+
+          context "when a block is passed" do
+            let!(:call) { subject.proxy_with_cache(args) { "hi" } }
+
+            it "proxies the item" do
+              expect(subject).
+                to have_received(:proxy) do |*supplied_args, &block|
+                  expect(supplied_args).to eq([path, template, proxy_options])
+                  expect(block.call).to eq("hi")
+                end
+            end
           end
         end
       end
