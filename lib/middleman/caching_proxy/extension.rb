@@ -19,19 +19,20 @@ module Middleman::CachingProxy
     end
 
     module InstanceMethods
-      def proxy_with_cache(path:, template:, proxy_options:, fingerprint:, &block)
+      def proxy_with_cache(
+        path:, template:, proxy_options:, fingerprint:, &block
+      )
         item = CacheItem.new(
           path: path,
           template: template,
-          proxy_options: proxy_options,
           fingerprint: fingerprint
         )
         will_use_cache = extensions[:caching_proxy].add(item)
         if !will_use_cache
           if block
-            proxy(item.path, item.template, item.proxy_options) { block.call }
+            proxy(item.path, item.template, proxy_options) { block.call }
           else
-            proxy item.path, item.template, item.proxy_options
+            proxy item.path, item.template, proxy_options
           end
         end
       end

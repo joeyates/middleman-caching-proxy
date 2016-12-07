@@ -51,4 +51,12 @@ RSpec.describe Middleman::CachingProxy::CachedResource do
       expect(subject.content_type).to eq("text/html")
     end
   end
+
+  describe "#data" do
+    it "is is an object with indifferent access" do
+      expect do
+        subject.data
+      end.not_to raise_error
+    end
+  end
 end
