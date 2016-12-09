@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "autostruct"
 
   spec.add_development_dependency "aruba"
+  spec.add_development_dependency "aruba-turnip"
   spec.add_development_dependency "codeclimate-test-reporter", "~> 0.6.0"
   spec.add_development_dependency "bundler", ">= 1.0.0"
   spec.add_development_dependency "rake", "~> 10.0"
