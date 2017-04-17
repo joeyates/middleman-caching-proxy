@@ -6,7 +6,14 @@ require "middleman/caching_proxy/cache_item"
 require "middleman/caching_proxy/cached_resource"
 
 module Middleman::CachingProxy
-  class Extension < ::Middleman::Extension
+  SUPERCLASS =
+    if Semantic::Version.new(Middleman::VERSION).major <= 3
+      ::Middleman::Extension
+    else
+      ::Middleman::ConfigExtension
+    end
+
+  class Extension < SUPERCLASS
     option :cache_directory,
        "tmp/proxy_cache",
        "The directory where cache files will be stored"
@@ -14,28 +21,54 @@ module Middleman::CachingProxy
        nil,
        "A global cache key"
 
-    if Semantic::Version.new(Middleman::VERSION).major >= 4
-      expose_to_config :proxy_with_cache
-    end
-
-    module InstanceMethods
-      def proxy_with_cache(
-        path:, template:, proxy_options:, fingerprint:, &block
-      )
-        item = CacheItem.new(
-          path: path,
-          template: template,
-          fingerprint: fingerprint
-        )
-        will_use_cache = extensions[:caching_proxy].add(item)
-        if !will_use_cache
-          if block
-            proxy(item.path, item.template, proxy_options) { block.call }
-          else
-            proxy item.path, item.template, proxy_options
+    if Semantic::Version.new(Middleman::VERSION).major <= 3
+      module Middleman3InstanceMethods
+        def proxy_with_cache(
+              path:, template:, proxy_options:, fingerprint:, &block
+            )
+          item = CacheItem.new(
+            path: path,
+            template: template,
+            fingerprint: fingerprint
+          )
+          will_use_cache = extensions[:caching_proxy].add(item)
+          if !will_use_cache
+            if block
+              proxy(item.path, item.template, proxy_options) { block.call }
+            else
+              proxy item.path, item.template, proxy_options
+            end
           end
         end
       end
+    else
+      module Middleman4InstanceMethods
+        def proxy_with_cache(path:, template:, proxy_options:, fingerprint:)
+          item = CacheItem.new(
+            path: path,
+            template: template,
+            fingerprint: fingerprint
+          )
+          will_use_cache = add(item)
+          if !will_use_cache
+            ProxyDescriptor.new(path, template, proxy_options)
+          end
+        end
+      end
+
+      ProxyDescriptor = Struct.new(:path, :target, :metadata) do
+        def execute_descriptor(app, resources)
+          descriptor = Middleman::Sitemap::Extensions::ProxyDescriptor.new(
+            ::Middleman::Util.normalize_path(path),
+            ::Middleman::Util.normalize_path(target),
+            metadata.dup
+          )
+          descriptor.execute_descriptor(app, resources)
+        end
+      end
+
+      include Middleman4InstanceMethods
+      expose_to_config :proxy_with_cache
     end
 
     attr_reader :copy_from_cache
@@ -45,7 +78,7 @@ module Middleman::CachingProxy
       super
 
       if Semantic::Version.new(Middleman::VERSION).major <= 3
-        app.send :include, InstanceMethods
+        app.send :include, Middleman3InstanceMethods
       end
 
       if !options.cache_key
@@ -55,6 +88,11 @@ module Middleman::CachingProxy
       @copy_from_cache = []
       @add_to_cache = []
       @cache = nil
+    end
+
+    # wrap 'expose_to_config' methods as '_internal_foo'
+    def after_configuration
+      super
     end
 
     def manipulate_resource_list(resources)
