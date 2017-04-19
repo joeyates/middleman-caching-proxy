@@ -24,6 +24,7 @@ module Middleman::CachingProxy
     subject { described_class.new(path: path, key: key) }
 
     before do
+      allow(FileUtils).to receive(:mkdir_p)
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(manifest_path) { manifest_exists }
       allow(File).to receive(:read).and_call_original
