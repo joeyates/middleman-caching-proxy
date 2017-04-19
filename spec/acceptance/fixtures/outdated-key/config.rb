@@ -1,4 +1,4 @@
-ignore "/templates/*"
+ignore "/page_template.html.erb"
 
 activate :caching_proxy, cache_key: "new-cache-key"
 
