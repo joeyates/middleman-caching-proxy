@@ -43,27 +43,29 @@ module Middleman::CachingProxy
       end
     else
       module Middleman4InstanceMethods
-        def proxy_with_cache(path:, template:, proxy_options:, fingerprint:)
-          item = CacheItem.new(
-            path: path,
-            template: template,
-            fingerprint: fingerprint
-          )
-          will_use_cache = add(item)
-          if !will_use_cache
-            ProxyDescriptor.new(path, template, proxy_options)
+        ProxyDescriptor = Struct.new(:path, :target, :metadata, :fingerprint) do
+          def execute_descriptor(app, resources)
+            item = CacheItem.new(
+              path: path,
+              template: template,
+              fingerprint: fingerprint
+            )
+            will_use_cache = add(item)
+            if !will_use_cache
+              descriptor = Middleman::Sitemap::Extensions::ProxyDescriptor.new(
+                ::Middleman::Util.normalize_path(path),
+                ::Middleman::Util.normalize_path(target),
+                metadata.dup
+              )
+              descriptor.execute_descriptor(app, resources)
+            else
+              nil
+            end
           end
         end
-      end
 
-      ProxyDescriptor = Struct.new(:path, :target, :metadata) do
-        def execute_descriptor(app, resources)
-          descriptor = Middleman::Sitemap::Extensions::ProxyDescriptor.new(
-            ::Middleman::Util.normalize_path(path),
-            ::Middleman::Util.normalize_path(target),
-            metadata.dup
-          )
-          descriptor.execute_descriptor(app, resources)
+        def proxy_with_cache(path:, template:, proxy_options:, fingerprint:)
+          ProxyDescriptor.new(path, template, proxy_options, fingerprint)
         end
       end
 
